@@ -31,11 +31,11 @@ module.exports = (sequelize, DataTypes) => {
 	department.associate = function (models) {
     department.hasMany(models.course, {
 			as: "courses",
-			foreignKey:"dept_name",
+			foreignKey:"dept_id",
 		  });
     department.hasMany(models.instructor, {
       as: "instructors",
-      foreignKey:"dept_name",
+      foreignKey:"dept_id",
       });
 	};
   return department;
