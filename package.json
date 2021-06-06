@@ -29,7 +29,7 @@
     "faker": "^4.1.0",
     "lodash.random": "^3.2.0",
     "lodash.times": "^4.3.2",
-    "nodemon": "^2.0.2",
+    "nodemon": "^2.0.7",
     "sequelize-cli": "^5.5.1"
   }
 }
