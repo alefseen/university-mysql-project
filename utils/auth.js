@@ -1,3 +1,4 @@
+const e = require('express');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 
@@ -47,5 +48,30 @@ function verifyToken(req, res, next) {
 	}
 }
 
+const generateToken = (id,type)=>{
+	return jwt.sign({ id,type }, config.secretKey, {
+        expiresIn: "24h" // expires in 24 hours
+      });
+}
 
-module.exports = { getJwtToken: getTokenFromHeader, isAuthunticated: verifyToken };
+const isStudent = (req,res,next)=>{
+	if(req.decoded && req.decoded.type==='student'){
+		next()
+	}
+	else{
+		res.status(401);
+		res.end()
+	}
+}
+
+const isInstructor = (req,res,next)=>{
+	if(req.decoded && req.decoded.type==='instructor'){
+		next()
+	}
+	else{
+		res.status(401);
+		res.end()
+	}
+}
+
+module.exports = { getJwtToken: getTokenFromHeader, isAuthunticated: verifyToken ,generateToken,isInstructor,isStudent};

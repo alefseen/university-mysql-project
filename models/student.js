@@ -6,19 +6,6 @@ module.exports = (sequelize, DataTypes) => {
 			allowNull: false,
 			autoIncrement: true,
 		}, 
-		number:{
-			type: DataTypes.STRING(10),
-			allowNull:false,
-			unique: true,
-		},
-		password:{
-			type: DataTypes.STRING(256),
-			allowNull:false,
-		},
-		name: {
-			type: DataTypes.STRING(20),
-			allowNull: false,
-		},
 	}, {
         timestamps: false,
 	});

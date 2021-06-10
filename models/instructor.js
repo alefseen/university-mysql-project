@@ -7,10 +7,6 @@ module.exports = (sequelize, DataTypes) => {
 			autoIncrement: true,
 			allowNull:false,
 		},
-		name: {
-			type: DataTypes.STRING(20),
-			allowNull: false,
-		}, 
 		salary: {
 			type: DataTypes.FLOAT(8,2),
 			allowNull: false,
@@ -18,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
 			  min: 29000,
 			},
 		},
+		
 	}, {
         timestamps: false,
 	});
