@@ -1,5 +1,4 @@
 const {generateToken} = require("../utils/auth");
-const config = require("../config");
 const rep = require('../services/repository/repository');
 const { Op } = require("sequelize");
 
