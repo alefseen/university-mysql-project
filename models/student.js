@@ -16,6 +16,11 @@ module.exports = (sequelize, DataTypes) => {
 			as: 'department',
 			allowNull:false,
 		});
+		student.hasOne(models.person, {
+			foreignKey: 'student_id',
+			as: 'person',
+			allowNull:false,
+		});
 		student.belongsToMany(models.section, {
             through:models.takes,
             as:'sections',

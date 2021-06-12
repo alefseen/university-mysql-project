@@ -1,5 +1,5 @@
 const rep = require('../../services/repository/repository');
-const { Op,col } = require("sequelize");
+const { Op } = require("sequelize");
 
 async function archiveSections(req, res, next) {
   const db = req.app.get("db");

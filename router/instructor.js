@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const auth = require('../utils/auth');
-const AuthController = require('../controllers/authcontroller');
+const SectionController = require('../controllers/instructor/sectionsController');
 
-router.post('/login', AuthController.studentLogin);
+router.get('/sections', SectionController.allSections);
+router.get('/students/:section',SectionController.sectionStudents)
 
 module.exports = router;
