@@ -59,11 +59,57 @@ async function archiveSections(req, res, next) {
 }
 
 
-async function currentSections(req, res, next) {
+async function canGivenSections(req, res, next) {
   const db = req.app.get("db");
 
   const id = req.decoded.id;
-  const courses = await rep.getItemByOptions(req, "person", { 
+  const deptSections = await rep.getItemByOptions(req, "person", { 
+    where: {
+      id,
+    },
+    attributes:[],
+    include: [
+      {
+        model: db.student,
+        as: "student",
+        include: [{
+          model: db.department,
+          as: "department",
+          include:[
+            {
+              model: db.course,
+              as: "courses",
+              attributes:['id','title','credits'],
+              include:[
+                {
+                  model: db.section,
+                  as: "sections",
+                  attributes:['id','semester','year'],
+                  include:[
+                    {
+                      model: db.instructor,
+                      as: "instructors",
+                      through:db.teaches,
+                      include:[
+                        {
+                          model: db.person,
+                          as: "person",
+                          attributes:['id','name'
+                        ],
+                        }
+                      ]
+                    }
+                  ]
+                },
+              ],
+            },
+          ]
+        }]
+      },
+    ],
+  });
+
+  const takedCourses = await rep.getItemByOptions(req, "person", { 
     where: {
       id,
     },
@@ -83,36 +129,54 @@ async function currentSections(req, res, next) {
             model:db.takes,
             attributes:['grade'],
             where:{
-              grade:{[Op.eq]:null}
+              grade:{[Op.in]:[
+                'A',
+                'A+',
+                'A-',
+                'B',
+                'B+',
+                'B-',
+                null
+              ]}
             }
           },
           include:[
             {
-              model: db.classroom,
-              as: "classroom",
-            },
-            {
               model: db.course,
               as: "course",
+              attributes:['id']
             },
-            {
-              model: db.timeslot,
-              as: "timeslot",
-            }
           ]
         }]
       },
     ],
   });
 
-  const mappedCourses = courses.student.sections.map(({semester,year,id,takes:{grade},course:{title,credits}})=>({
-    id,
-    title,
-    credits,
-    semester:`${year} ${semester}`
-  }))
+  const takedCoursesID=takedCourses.student.sections.map(({course:{id:courseId}})=>courseId);
+  
+  const validCourses = deptSections.student.department.courses.filter(({id})=>!takedCoursesID.includes(id)).map(
+    ({id})=>id
+  )
 
-  return res.send(mappedCourses)
+  const openToGetCourses = deptSections?.student.department.courses.filter(({id})=>!validCourses.includes(id));
+
+  const response = openToGetCourses.map(({title,credits,sections})=>(
+    {
+      title,
+      credits,
+      sections:sections.map(({id,semester,year,instructors})=>(
+        {
+          id,
+          semester: `${semester} ${year}`,
+          instructors:instructors.map(({person:{name}})=>(
+            name
+          ))
+        }
+      ))
+    }
+  ))
+  
+  res.send(response)
 }
 
-module.exports = { archiveSections, currentSections };
+module.exports = { archiveSections, canGivenSections };

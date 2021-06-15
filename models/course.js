@@ -26,7 +26,10 @@ module.exports = (sequelize, DataTypes) => {
 			as: 'department',
 			allowNull:true,
 		});
-
+		course.hasMany(models.section, {
+			foreignKey: 'course_id',
+			as: 'sections',
+		});
 		course.belongsToMany(models.course, {
             through:models.prereq,
             as:'prereqs',
