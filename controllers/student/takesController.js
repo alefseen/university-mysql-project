@@ -158,7 +158,7 @@ async function canGivenSections(req, res, next) {
     ({id})=>id
   )
 
-  const openToGetCourses = deptSections?.student.department.courses.filter(({id})=>!validCourses.includes(id));
+  const openToGetCourses = deptSections?.student.department.courses.filter(({id})=>validCourses.includes(id));
 
   const courses = openToGetCourses.map(({title,credits,sections})=>(
     {
@@ -187,4 +187,23 @@ async function canGivenSections(req, res, next) {
   res.send(response)
 }
 
-module.exports = { archiveSections, canGivenSections };
+async function submitCourses(req, res, next) {
+  const db = req.app.get("db");
+
+  const id = req.decoded.id;
+
+  const {student_id:studentId} = await rep.getById(req,'person',id)
+
+  const takes = req.body.takes.map(sectionId=>({sectionId,studentId,grade:null}))
+  console.log(takes);
+try{
+  const postres = await rep.bulkUpdateItems(req,'takes',takes,['grade'])
+    return res.send({status:'success'})
+}
+  catch(e){
+    return res.send({status:'error'})
+  }
+}
+
+
+module.exports = { archiveSections, canGivenSections, submitCourses };

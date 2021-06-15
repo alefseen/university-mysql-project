@@ -4,5 +4,6 @@ const takesController = require('../controllers/student/takesController');
 
 router.get('/courses', takesController.archiveSections);
 router.get('/take/courses', takesController.canGivenSections);
+router.post('/take', takesController.submitCourses);
 
 module.exports = router;
