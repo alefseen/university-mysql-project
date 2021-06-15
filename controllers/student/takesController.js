@@ -160,7 +160,7 @@ async function canGivenSections(req, res, next) {
 
   const openToGetCourses = deptSections?.student.department.courses.filter(({id})=>!validCourses.includes(id));
 
-  const response = openToGetCourses.map(({title,credits,sections})=>(
+  const courses = openToGetCourses.map(({title,credits,sections})=>(
     {
       title,
       credits,
@@ -170,11 +170,19 @@ async function canGivenSections(req, res, next) {
           semester: `${semester} ${year}`,
           instructors:instructors.map(({person:{name}})=>(
             name
-          ))
+          )).join(', ')
         }
       ))
     }
   ))
+
+  const response = []
+
+  courses.forEach(({sections,...c}) => {
+    sections.forEach(s=>{
+      response.push({...c,...s})
+    })
+  });
   
   res.send(response)
 }
