@@ -92,4 +92,17 @@ const mapped = students.map(({id,takes:{grade},person:{name}})=>({
   return res.send(mapped)
 }
 
-module.exports = { allSections,sectionStudents };
+async function submitGrade(req, res, next) {
+  const takes = req.body.grades.map(({sectionId,studentId,grade})=>({sectionId,studentId,grade}))
+
+  try{
+   await rep.bulkUpdateItems(req,'takes',takes,['grade'])
+    return res.send({status:'success'})
+}
+  catch(e){
+    return res.send({status:'error'})
+  }
+}
+
+
+module.exports = { allSections,sectionStudents,submitGrade };
