@@ -134,7 +134,6 @@ async function canGivenSections(req, res, next) {
                   'B',
                   'B+',
                   'B-',
-                  null
                 ]
               }
             }
