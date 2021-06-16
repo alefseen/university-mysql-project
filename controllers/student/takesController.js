@@ -24,9 +24,6 @@ async function archiveSections(req, res, next) {
           through:{
             model:db.takes,
             attributes:['grade'],
-            where:{
-              grade:{[Op.not]:null}
-            }
           },
           include:[
             {
